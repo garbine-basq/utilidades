@@ -1,0 +1,21 @@
+import ftplib
+
+# connect to the server
+ftp = ftplib.FTP('52.164.213.214', 'danobat-ftp', 'azpSeBST1kEM2RcpquH4')
+ftp.login()
+
+# switch to the directory containing the data
+ftp.cwd('/var/www/wordpress/wp-content/')
+ftp.pwd()
+
+# get the list of files in this ftp dir
+all_files= ftp.nlst()
+hail_files = [i for i in all_files if i.startswith('hail')]
+
+# now download to the desired path
+for filename in hail_files:
+    print("Downloading " + filename, end=" | ")
+    with open(r'E:\GIS_Data\Analytics\ncdc_hail_data\raw\\' 
+              + filename + ".csv.gz", "wb") as file_handle:
+        ftp.retrbinary("RETR " + filename, file_handle.write)
+    print(" finished")
